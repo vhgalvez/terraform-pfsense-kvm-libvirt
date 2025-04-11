@@ -87,6 +87,49 @@ Puedes añadir claves SSH y red DHCP por `cloud-init` usando:
 - `config/pfsense-user-data.yaml`
 
 ---
+# 🖧 NIC Passthrough en KVM (opcional)
+
+El **NIC Passthrough** permite asignar directamente una tarjeta de red física (PCIe) a una máquina virtual, mejorando el rendimiento y reduciendo la latencia. Es ideal para firewalls virtualizados como pfSense.
+
+---
+
+## 🔍 Verificar compatibilidad de virtualización en la CPU
+
+Para habilitar el passthrough, tu CPU debe soportar **virtualización por hardware**. Verifícalo con el siguiente comando:
+
+```bash
+lscpu | grep Virtualization
+```
+
+- Si aparece `VT-x` (Intel) o `AMD-V`, tu CPU es compatible.
+- Si no aparece, revisa el BIOS/UEFI y asegúrate de que la virtualización esté activada.
+- Si tu CPU no tiene soporte, considera usar otro equipo o una solución de virtualización alternativa.
+
+---
+
+## ✅ Verificar soporte con `cpuinfo`
+
+También puedes comprobar directamente si el procesador soporta **Intel VT-x** o **AMD-V**:
+
+```bash
+grep -E '(vmx|svm)' /proc/cpuinfo
+```
+
+- `vmx`: soporte para **Intel VT-x**
+- `svm`: soporte para **AMD-V**
+
+> 💡 Consejo: si no se devuelve ningún resultado, es probable que la virtualización esté desactivada en el BIOS/UEFI.
+
+---
+
+## 🔧 Siguiente paso
+
+Si tu CPU es compatible, puedes continuar con la configuración de:
+
+- **IOMMU y VFIO**
+- **Passthrough de NICs PCIe**
+- **Configuración XML avanzada con libvirt**
+
 
 ## 🛠 Archivos útiles
 
